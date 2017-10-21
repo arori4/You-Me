@@ -33,13 +33,13 @@ public class WallMaterialController : MonoBehaviour {
     }
 
     public void ChangeColor(Color color) {
-        StartCoroutine(Co_changeColor(color, COLOR_CHANGE_DURATION));
+        StartCoroutine(C_changeColor(color, COLOR_CHANGE_DURATION));
     }
 
 
     /** Changes the color, gradually, of the walls
      */
-    private IEnumerator Co_changeColor(Color newColor, float duration) {
+    private IEnumerator C_changeColor(Color newColor, float duration) {
         // get current color
         Color oldColor = m_sharedMaterial.color;
         Color currentColor = oldColor;

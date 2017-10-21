@@ -8,13 +8,16 @@ public class ColorWheelTriangle : MonoBehaviour {
     private const float REGULAR_SCALE = 0.15f;
     private const float SELECTED_SCALE = 0.2f;
     private const float ANIMATION_DURATION = 0.5f;
+    private const float ANIMATION_START_DURATION = 0.5f;
 
-    private ColorWheel m_controller;
-    private bool m_gazedAt;
+    private ColorWheel m_wheel;
     private bool m_selected;
     private Color m_wallColor;
     private Color m_displayColor;
     private Color m_hoverHighlightColor;
+
+    private void Start() {
+    }
 
     /* Sets the colors used for the triangle */
     public void SetColors(Color wallColor, Color displayColor, Color hoverHighlightColor) {
@@ -26,7 +29,7 @@ public class ColorWheelTriangle : MonoBehaviour {
 
     /* Sets the color wheel controller */
     public void SetController(ColorWheel colorWheel) {
-        m_controller = colorWheel;
+        m_wheel = colorWheel;
     }
 
     /* Changes the color on gazing */
@@ -39,33 +42,34 @@ public class ColorWheelTriangle : MonoBehaviour {
         }
     }
 
+    private void OnEnable() {
+        gameObject.transform.localScale = Vector3.zero;
+        StartCoroutine(C_Scale(0, REGULAR_SCALE, ANIMATION_START_DURATION));
+    }
+
     /* Toggles whether the object has been selected or not */
     public void Select(bool selected) {
         // something is only done when there is a change in status
         if (selected != m_selected) {
             m_selected = selected;
-            StartCoroutine(C_Scale(selected, ANIMATION_DURATION));
-
-            // if actually selected, call back to switch color
+            
             if (selected) {
-                m_controller.ChangeColorCallback(m_wallColor, this);
+                m_wheel.ChangeColorCallback(m_wallColor, this); // if actually selected, call back to switch color
+                StartCoroutine(C_Scale(REGULAR_SCALE, SELECTED_SCALE, ANIMATION_DURATION));
+            }
+            else {
+                StartCoroutine(C_Scale(SELECTED_SCALE, REGULAR_SCALE, ANIMATION_DURATION));
             }
         }
     }
 
     /* Animation to enlarge/reduce */
-    private IEnumerator C_Scale(bool selected, float duration) {
+    private IEnumerator C_Scale(float startScale, float endScale, float duration) {
 
         // Create start and end vectors
         float index = 0;
-        float startScale = REGULAR_SCALE;
-        float endScale = SELECTED_SCALE;
-        if (!selected) {
-            startScale = SELECTED_SCALE;
-            endScale = REGULAR_SCALE;
-        }
-        Vector3 startScaleVector = new Vector3(startScale, startScale, REGULAR_SCALE);
-        Vector3 endScaleVector = new Vector3(endScale, endScale, REGULAR_SCALE);
+        Vector3 startScaleVector = new Vector3(startScale, startScale, startScale);
+        Vector3 endScaleVector = new Vector3(endScale, endScale, endScale);
 
         // Create intervals
         float interval = 1.0f / duration;

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class ColorWheel : MonoBehaviour {
 
-    readonly public int NUM_TRIANGLES = 12;
-    readonly public float SEPARATION = 0.0f;
-    readonly Vector3 TRIANGLE_SCALE = new Vector3(1, 1, 1) * 0.15f;
-    readonly Color[] WALL_COLORS = {
+    private readonly float ANIMATION_START_TIME = 1.0f;
+    private readonly int NUM_TRIANGLES = 12;
+    private readonly float SEPARATION = 0.0f;
+    private readonly Vector3 TRIANGLE_SCALE = new Vector3(1, 1, 1) * 0.15f;
+    private readonly Color[] WALL_COLORS = {
         new Color(255/255.0f, 105/255.0f, 97/255.0f), //Red
         new Color(255/255.0f, 153/255.0f, 51/255.0f), //Orange
         new Color(248/255.0f, 222/255.0f, 126/255.0f), //Yellow
@@ -49,14 +50,48 @@ public class ColorWheel : MonoBehaviour {
         new Color(209/255.0f,  209/255.0f,  209/255.0f), //Grey
         new Color(222/255.0f,  184/255.0f,  135/255.0f) //Beige
     };
-    public WallMaterialController m_wallController;
+
+    public Level0Controller controller;
     public GameObject m_colorTrianglePrefab;
+
     private ColorWheelTriangle m_currentlySelectedTriangle;
+    private GameObject m_ball;
+    private GameObject[] arr_triangles;
 
     void Start() {
+        arr_triangles = new GameObject[NUM_TRIANGLES];
+        StartCoroutine(C_Load());
+    }
+
+    void Update() {
+
+    }
+
+    /* Start level sequence */
+    public void StartLevel() {
+        StartCoroutine(C_Start(ANIMATION_START_TIME));
+    }
+
+    /* Clicking on a color wheel triangle calls back to set the wall material color */
+    public void ChangeColorCallback(Color wallColor, ColorWheelTriangle selector) {
+        if (m_currentlySelectedTriangle != null) {
+            m_currentlySelectedTriangle.Select(false);
+        }
+        m_currentlySelectedTriangle = selector;
+        controller.ChooseColor(wallColor);
+    }
+
+    /* Sets the ball to be colored */
+    public void SetBall(GameObject ball) {
+        m_ball = ball;
+    }
+
+    /* Loading Coroutine, for performance reasons. Reduces load by initializing one object per update*/
+    private IEnumerator C_Load() {
 
         // set properties of m_colorTrianglePrefab
         m_colorTrianglePrefab.transform.localScale = TRIANGLE_SCALE;
+        yield return null;
 
         // create %NUM_TRIANGLES number of triangles
         for (int index = 0; index < NUM_TRIANGLES; index++) {
@@ -65,9 +100,13 @@ public class ColorWheel : MonoBehaviour {
                 m_colorTrianglePrefab,
                 gameObject.transform.position,
                 rotation);
+            newObject.SetActive(false);
+
+            yield return null;
 
             // move the triangle away slightly
             newObject.transform.position += rotation * new Vector3(0, -1, 0) * SEPARATION;
+            arr_triangles[index] = newObject;
 
             // register controller with triangle
             ColorWheelTriangle triangleScript = newObject.GetComponent<ColorWheelTriangle>();
@@ -78,19 +117,20 @@ public class ColorWheel : MonoBehaviour {
                 triangleScript.SetController(this);
                 triangleScript.SetColors(WALL_COLORS[index], DISPLAY_COLORS[index], HOVER_HIGHLIGHT_COLORS[index]);
             }
+
+            yield return null;
         }
     }
 
-    void Update() {
+    /* Launches each of the triangle animations */
+    private IEnumerator C_Start(float loadTime) {
+        float waitTime = loadTime / NUM_TRIANGLES;
 
-    }
+        for (int index = 0; index < NUM_TRIANGLES; index++) {
+            arr_triangles[index].SetActive(true);
 
-    public void ChangeColorCallback(Color wallColor, ColorWheelTriangle selector) {
-        if (m_currentlySelectedTriangle != null) {
-            m_currentlySelectedTriangle.Select(false);
+            yield return new WaitForSeconds(waitTime);
         }
-        m_currentlySelectedTriangle = selector;
-        m_wallController.ChangeColor(wallColor);
     }
 }
 
