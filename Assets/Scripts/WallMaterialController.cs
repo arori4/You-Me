@@ -6,37 +6,30 @@ public class WallMaterialController : MonoBehaviour {
 
     private const float COLOR_CHANGE_DURATION = 1.0f;
 
-    Material currentMaterial;
-
     public GameObject floor;
     public GameObject ceiling;
     public GameObject northWall, southWall, westWall, eastWall;
 
+    Material m_sharedMaterial;
+
     void Start() {
-        
+        m_sharedMaterial = floor.GetComponent<Renderer>().material;
+
+        //ceiling.GetComponent<Renderer>().material = m_sharedMaterial; //not needed now
+        northWall.GetComponent<Renderer>().material = m_sharedMaterial;
+        southWall.GetComponent<Renderer>().material = m_sharedMaterial;
+        westWall.GetComponent<Renderer>().material = m_sharedMaterial;
+        eastWall.GetComponent<Renderer>().material = m_sharedMaterial;
     }
 
     void Update() {
 
     }
 
-    /** Sets the material of the walls
-     */
-    private void SetMaterial(Material newMaterial) {
-        floor.GetComponent<Renderer>().material = newMaterial;
-        ceiling.GetComponent<Renderer>().material = newMaterial;
-        northWall.GetComponent<Renderer>().material = newMaterial;
-        southWall.GetComponent<Renderer>().material = newMaterial;
-        westWall.GetComponent<Renderer>().material = newMaterial;
-        eastWall.GetComponent<Renderer>().material = newMaterial;
-    }
-
     /** Sets the color of the walls
      */
     private void SetColor(Color color) {
-        currentMaterial = floor.GetComponent<Renderer>().material;
-        currentMaterial.color = color;
-        SetMaterial(currentMaterial);
+        m_sharedMaterial.color = color;
     }
 
     public void ChangeColor(Color color) {
@@ -48,7 +41,7 @@ public class WallMaterialController : MonoBehaviour {
      */
     private IEnumerator Co_changeColor(Color newColor, float duration) {
         // get current color
-        Color oldColor = floor.GetComponent<Renderer>().material.color;
+        Color oldColor = m_sharedMaterial.color;
         Color currentColor = oldColor;
 
         // set duration

@@ -5,20 +5,23 @@ using UnityEngine;
 // another class to interact with the color wheel triangle
 public class ColorWheelTriangle : MonoBehaviour {
 
-    private const float REGULAR_SCALE = 0.25f;
-    private const float SELECTED_SCALE = 0.4f;
+    private const float REGULAR_SCALE = 0.15f;
+    private const float SELECTED_SCALE = 0.2f;
     private const float ANIMATION_DURATION = 0.5f;
 
     private ColorWheel m_controller;
     private bool m_gazedAt;
     private bool m_selected;
-    private Color m_baseColor;
-    private Color m_selectedColor;
+    private Color m_wallColor;
+    private Color m_displayColor;
+    private Color m_hoverHighlightColor;
 
     /* Sets the colors used for the triangle */
-    public void SetColors(Color baseColor, Color selectedColor) {
-        m_baseColor = baseColor;
-        m_selectedColor = selectedColor;
+    public void SetColors(Color wallColor, Color displayColor, Color hoverHighlightColor) {
+        m_wallColor = wallColor;
+        m_displayColor = displayColor;
+        m_hoverHighlightColor = hoverHighlightColor;
+        GetComponent<Renderer>().material.color = m_displayColor;
     }
 
     /* Sets the color wheel controller */
@@ -28,16 +31,11 @@ public class ColorWheelTriangle : MonoBehaviour {
 
     /* Changes the color on gazing */
     public void SetGazedAt(bool gazedAt) {
-        if (m_baseColor != null && m_selectedColor != null) {
-            if (gazedAt || m_selected) {
-                GetComponent<Renderer>().material.color = m_selectedColor;
-            }
-            else {
-                GetComponent<Renderer>().material.color = m_baseColor;
-            }
+        if (gazedAt || m_selected) {
+            GetComponent<Renderer>().material.color = m_displayColor;
         }
         else {
-            Debug.Log("Error: ColorWheelTriangle has missing colors");
+            GetComponent<Renderer>().material.color = m_hoverHighlightColor;
         }
     }
 
@@ -47,7 +45,11 @@ public class ColorWheelTriangle : MonoBehaviour {
         if (selected != m_selected) {
             m_selected = selected;
             StartCoroutine(C_Scale(selected, ANIMATION_DURATION));
-            m_controller.ChangeColorCallback(m_baseColor);
+
+            // if actually selected, call back to switch color
+            if (selected) {
+                m_controller.ChangeColorCallback(m_wallColor, this);
+            }
         }
     }
 
@@ -80,6 +82,5 @@ public class ColorWheelTriangle : MonoBehaviour {
         gameObject.transform.localScale = endScaleVector;
 
     }
-
 
 }

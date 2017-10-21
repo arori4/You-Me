@@ -5,27 +5,55 @@ using UnityEngine;
 public class ColorWheel : MonoBehaviour {
 
     readonly public int NUM_TRIANGLES = 12;
-    readonly public float SEPARATION = 0.2f;
-    readonly Vector3 TRIANGLE_SCALE = new Vector3(1, 1, 1) * 0.25f;
-    readonly Color[] COLORS = {
-        Color.red,
-        Color.Lerp(Color.red, Color.yellow, 0.5f),
-        Color.yellow,
-        Color.Lerp(Color.yellow, Color.green, 0.5f),
-        Color.green,
-        Color.cyan,
-        Color.blue,
-        Color.Lerp(Color.red, Color.blue, 0.66f),
-        Color.grey,
-        Color.white,
-        Color.Lerp(Color.red, Color.blue, 0.33f),
-        Color.magenta
+    readonly public float SEPARATION = 0.0f;
+    readonly Vector3 TRIANGLE_SCALE = new Vector3(1, 1, 1) * 0.15f;
+    readonly Color[] WALL_COLORS = {
+        new Color(255/255.0f, 105/255.0f, 97/255.0f), //Red
+        new Color(255/255.0f, 153/255.0f, 51/255.0f), //Orange
+        new Color(248/255.0f, 222/255.0f, 126/255.0f), //Yellow
+        new Color(227/255.0f, 249/255.0f, 136/255.0f), //Yellow-Green
+        new Color(113/255.0f, 188/255.0f,120/255.0f), //Green
+        new Color(150/255.0f, 222/255.0f, 209/255.0f), //Cyan
+        new Color(133/255.0f, 196/255.0f, 234/255.0f), //Blue
+        new Color(255/255.0f, 153/255.0f, 204/255.0f), //Magenta
+        new Color(216/255.0f, 145/255.0f, 239/255.0f), //Lilac
+        new Color(172/255.0f, 172/255.0f, 230/255.0f), //Purple
+        new Color(221/255.0f, 221/255.0f, 221/255.0f), //Grey
+        new Color(239/255.0f, 207/255.0f, 151/255.0f) //Beige
     };
-
+    readonly Color[] DISPLAY_COLORS = {
+        new Color(230/255.0f, 32/255.0f, 32/255.0f), //Red
+        new Color(255/255.0f, 140/255.0f, 0/255.0f), //Orange
+        new Color(255/255.0f, 204/255.0f, 0/255.0f), //Yellow
+        new Color(186/255.0f, 227/255.0f, 3/255.0f), //Yellow-Green
+        new Color(0/255.0f, 165/255.0f, 80/255.0f), //Green
+        new Color(10/255.0f, 186/255.0f, 181/255.0f), //Cyan
+        new Color(49/255.0f, 140/255.0f, 231/255.0f), //Blue
+        new Color(249/255.0f, 132/255.0f, 229/255.0f), //Magenta
+        new Color(182/255.0f, 102/255.0f, 210/255.0f), //Lilac
+        new Color(89/255.0f, 70/255.0f, 178/255.0f), //Purple
+        new Color(186/255.0f, 186/255.0f, 186/255.0f), //Grey
+        new Color(200/255.0f, 173/255.0f, 127/255.0f) //Beige
+    };
+    readonly Color[] HOVER_HIGHLIGHT_COLORS = {
+        new Color(255/255.0f,  36/255.0f,  0/255.0f), //Red
+        new Color(255/255.0f,  120/255.0f,  0/255.0f), //Orange
+        new Color(255/255.0f,  219/255.0f,  0/255.0f), //Yellow
+        new Color(223/255.0f,  255/255.0f,  0/255.0f), //Yellow-Green
+        new Color(3/255.0f,  192/255.0f,  60/255.0f), //Green
+        new Color(64/255.0f,  224/255.0f,  208/255.0f), //Cyan
+        new Color(58/255.0f,  173/255.0f,  255/255.0f), //Blue
+        new Color(255/255.0f,  29/255.0f,  206/255.0f), //Magenta
+        new Color(208/255.0f,  114/255.0f,  255/255.0f), //Lilac
+        new Color(103/255.0f,  54/255.0f,  249/255.0f), //Purple
+        new Color(209/255.0f,  209/255.0f,  209/255.0f), //Grey
+        new Color(222/255.0f,  184/255.0f,  135/255.0f) //Beige
+    };
     public WallMaterialController m_wallController;
     public GameObject m_colorTrianglePrefab;
-    
-	void Start () {
+    private ColorWheelTriangle m_currentlySelectedTriangle;
+
+    void Start() {
 
         // set properties of m_colorTrianglePrefab
         m_colorTrianglePrefab.transform.localScale = TRIANGLE_SCALE;
@@ -34,10 +62,9 @@ public class ColorWheel : MonoBehaviour {
         for (int index = 0; index < NUM_TRIANGLES; index++) {
             Quaternion rotation = Quaternion.Euler(0, 0, index * 360 / NUM_TRIANGLES);
             GameObject newObject = GameObject.Instantiate(
-                m_colorTrianglePrefab, 
-                gameObject.transform.position, 
+                m_colorTrianglePrefab,
+                gameObject.transform.position,
                 rotation);
-            newObject.GetComponent<Renderer>().material.color = COLORS[index];
 
             // move the triangle away slightly
             newObject.transform.position += rotation * new Vector3(0, -1, 0) * SEPARATION;
@@ -49,17 +76,21 @@ public class ColorWheel : MonoBehaviour {
             }
             else {
                 triangleScript.SetController(this);
-                triangleScript.SetColors(COLORS[index], COLORS[(index + 1) % 12]);
+                triangleScript.SetColors(WALL_COLORS[index], DISPLAY_COLORS[index], HOVER_HIGHLIGHT_COLORS[index]);
             }
         }
-	}
-	
-	void Update () {
-		
-	}
+    }
 
-    public void  ChangeColorCallback(Color selectedColor) {
-        m_wallController.ChangeColor(selectedColor);
+    void Update() {
+
+    }
+
+    public void ChangeColorCallback(Color wallColor, ColorWheelTriangle selector) {
+        if (m_currentlySelectedTriangle != null) {
+            m_currentlySelectedTriangle.Select(false);
+        }
+        m_currentlySelectedTriangle = selector;
+        m_wallController.ChangeColor(wallColor);
     }
 }
 
