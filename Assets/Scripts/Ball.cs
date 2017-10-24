@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour {
-
-    private readonly static float START_SCALE_AMOUNT = 0.75f;
-    private readonly static Vector3 START_SCALE = new Vector3(
-        START_SCALE_AMOUNT, START_SCALE_AMOUNT, START_SCALE_AMOUNT);
+    
     private readonly static float START_DURATION = 0.5f;
     private readonly static float COLOR_CHANGE_DURATION = 0.25f;
 
@@ -23,16 +20,32 @@ public class Ball : MonoBehaviour {
 		
 	}
 
+    private void FixedUpdate() {
+        
+    }
+
+    private void OnCollisionEnter(Collision collision) {
+        GetComponent<Rigidbody>().velocity *= -bounciness; // causes bouncing
+
+    }
+
     /* A special method to enlarge the ball for Environment_0 */
-    public void Environment_Choose_Create(Vector3 position) {
+    public void Environment_Choose_Create(Vector3 position, float scale) {
         transform.position = position;
-        StartCoroutine(C_Scale(0.0f, START_SCALE_AMOUNT, START_DURATION));
+        StartCoroutine(C_Scale(0.0f, scale, START_DURATION));
+    }
+
+    public void Shrink(float duration, float startScale) {
+        StartCoroutine(C_Scale(startScale, 0.0f, duration));
     }
 
     public void ChangeColor(Color color) {
         StartCoroutine(C_changeColor(color, COLOR_CHANGE_DURATION));
     }
 
+    public void ChangeTexture(Texture texture) {
+        m_material.mainTexture = texture;
+    }
 
     /** Changes the color, gradually, of the walls
      */

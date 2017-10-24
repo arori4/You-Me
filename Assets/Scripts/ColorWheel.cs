@@ -5,6 +5,7 @@ using UnityEngine;
 public class ColorWheel : MonoBehaviour {
 
     private readonly float ANIMATION_START_TIME = 1.0f;
+    private readonly float ANIMATION_FOLD_TIME = 0.5f;
     private readonly int NUM_TRIANGLES = 12;
     private readonly float SEPARATION = 0.0f;
     private readonly Vector3 TRIANGLE_SCALE = new Vector3(1, 1, 1) * 0.15f;
@@ -68,8 +69,12 @@ public class ColorWheel : MonoBehaviour {
     }
 
     /* Start level sequence */
-    public void StartLevel() {
+    public void Unfold() {
         StartCoroutine(C_Start(ANIMATION_START_TIME));
+    }
+
+    public void Fold() {
+        StartCoroutine(C_Fold(ANIMATION_FOLD_TIME));
     }
 
     /* Clicking on a color wheel triangle calls back to set the wall material color */
@@ -128,6 +133,17 @@ public class ColorWheel : MonoBehaviour {
 
         for (int index = 0; index < NUM_TRIANGLES; index++) {
             arr_triangles[index].SetActive(true);
+
+            yield return new WaitForSeconds(waitTime);
+        }
+    }
+
+    /* Folds the wheel, and deactivates all of the triangles */
+    private IEnumerator C_Fold(float foldTime) {
+        float waitTime = foldTime / NUM_TRIANGLES;
+
+        for (int index = 0; index < NUM_TRIANGLES; index++) {
+            arr_triangles[index].GetComponent<ColorWheelTriangle>().Fold();
 
             yield return new WaitForSeconds(waitTime);
         }

@@ -19,6 +19,12 @@ public class ColorWheelTriangle : MonoBehaviour {
     private void Start() {
     }
 
+    private void OnEnable() {
+        gameObject.transform.localScale = Vector3.zero;
+        StartCoroutine(C_Scale(0, REGULAR_SCALE, ANIMATION_START_DURATION));
+        m_selected = false; // needed for multiple uses
+    }
+
     /* Sets the colors used for the triangle */
     public void SetColors(Color wallColor, Color displayColor, Color hoverHighlightColor) {
         m_wallColor = wallColor;
@@ -32,6 +38,12 @@ public class ColorWheelTriangle : MonoBehaviour {
         m_wheel = colorWheel;
     }
 
+    /* Folds the color wheel triangle and deactivates it. */
+    public void Fold() {
+        StartCoroutine(C_Scale(REGULAR_SCALE, 0.0f, ANIMATION_START_DURATION));
+        StartCoroutine(C_Delay_Deactivate(ANIMATION_START_DURATION + 0.1f));
+    }
+
     /* Changes the color on gazing */
     public void SetGazedAt(bool gazedAt) {
         if (gazedAt || m_selected) {
@@ -40,11 +52,6 @@ public class ColorWheelTriangle : MonoBehaviour {
         else {
             GetComponent<Renderer>().material.color = m_hoverHighlightColor;
         }
-    }
-
-    private void OnEnable() {
-        gameObject.transform.localScale = Vector3.zero;
-        StartCoroutine(C_Scale(0, REGULAR_SCALE, ANIMATION_START_DURATION));
     }
 
     /* Toggles whether the object has been selected or not */
@@ -85,6 +92,13 @@ public class ColorWheelTriangle : MonoBehaviour {
         // End clamp for consistency
         gameObject.transform.localScale = endScaleVector;
 
+    }
+
+    /* Special coroutine to deactivate the game object after a delay, for performance reasons */
+    private IEnumerator C_Delay_Deactivate(float duration) {
+        yield return new WaitForSeconds(duration);
+        gameObject.SetActive(false);
+        yield return null;
     }
 
 }
