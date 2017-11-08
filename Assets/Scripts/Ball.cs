@@ -7,8 +7,9 @@ public class Ball : MonoBehaviour {
     private readonly static float START_DURATION = 0.5f;
     private readonly static float COLOR_CHANGE_DURATION = 0.25f;
 
-    public string text;
-    public float bounciness;
+    public string m_text;
+    public float m_bounciness;
+    public float m_speed;
 
     private Material m_material;
 
@@ -24,8 +25,9 @@ public class Ball : MonoBehaviour {
         
     }
 
+
     private void OnCollisionEnter(Collision collision) {
-        GetComponent<Rigidbody>().velocity *= -bounciness; // causes bouncing
+        GetComponent<Rigidbody>().velocity *= -m_bounciness; // causes bouncing
 
     }
 
@@ -96,4 +98,6 @@ public class Ball : MonoBehaviour {
         gameObject.transform.localScale = endScaleVector;
 
     }
+
+
 }

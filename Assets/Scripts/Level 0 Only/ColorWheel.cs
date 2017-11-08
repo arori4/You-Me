@@ -23,7 +23,7 @@ public class ColorWheel : MonoBehaviour {
         new Color(221/255.0f, 221/255.0f, 221/255.0f), //Grey
         new Color(239/255.0f, 207/255.0f, 151/255.0f) //Beige
     };
-    readonly Color[] DISPLAY_COLORS = {
+    private readonly Color[] DISPLAY_COLORS = {
         new Color(230/255.0f, 32/255.0f, 32/255.0f), //Red
         new Color(255/255.0f, 140/255.0f, 0/255.0f), //Orange
         new Color(255/255.0f, 204/255.0f, 0/255.0f), //Yellow
@@ -37,7 +37,7 @@ public class ColorWheel : MonoBehaviour {
         new Color(186/255.0f, 186/255.0f, 186/255.0f), //Grey
         new Color(200/255.0f, 173/255.0f, 127/255.0f) //Beige
     };
-    readonly Color[] HOVER_HIGHLIGHT_COLORS = {
+    private readonly Color[] HOVER_HIGHLIGHT_COLORS = {
         new Color(255/255.0f,  36/255.0f,  0/255.0f), //Red
         new Color(255/255.0f,  120/255.0f,  0/255.0f), //Orange
         new Color(255/255.0f,  219/255.0f,  0/255.0f), //Yellow

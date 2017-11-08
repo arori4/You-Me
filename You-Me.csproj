@@ -81,6 +81,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\1_Buckets\_scripts\BallBehavior.cs" />
+    <Compile Include="Assets\1_Buckets\_scripts\BucketBehavior.cs" />
+    <Compile Include="Assets\1_Buckets\_scripts\BucketTrigger.cs" />
     <Compile Include="Assets\GoogleVR\Demos\Scripts\DemoInputManager.cs" />
     <Compile Include="Assets\GoogleVR\Demos\Scripts\DemoSceneManager.cs" />
     <Compile Include="Assets\GoogleVR\Demos\Scripts\GVRDemo\GVRDemoManager.cs" />
@@ -191,14 +194,20 @@
     <Compile Include="Assets\GoogleVR\Scripts\Utilities\GvrUIHelpers.cs" />
     <Compile Include="Assets\GoogleVR\Scripts\Video\GvrVideoPlayerTexture.cs" />
     <Compile Include="Assets\Scripts\Ball.cs" />
-    <Compile Include="Assets\Scripts\ColorWheel.cs" />
-    <Compile Include="Assets\Scripts\ColorWheelTriangle.cs" />
-    <Compile Include="Assets\Scripts\Level0Controller.cs" />
+    <Compile Include="Assets\Scripts\BucketsLevelManager.cs" />
+    <Compile Include="Assets\Scripts\Level 0 Only\ColorWheel.cs" />
+    <Compile Include="Assets\Scripts\Level 0 Only\ColorWheelTriangle.cs" />
+    <Compile Include="Assets\Scripts\Level 0 Only\HeartbeatSquare.cs" />
+    <Compile Include="Assets\Scripts\Level 0 Only\Level0Controller.cs" />
+    <Compile Include="Assets\Scripts\Level 0 Only\SpeedBall.cs" />
+    <Compile Include="Assets\Scripts\Level 0 Only\TextureBall.cs" />
     <Compile Include="Assets\Scripts\ObjectRandomRotater.cs" />
-    <Compile Include="Assets\Scripts\TextureBall.cs" />
+    <Compile Include="Assets\Scripts\PreferencesManager.cs" />
+    <Compile Include="Assets\Scripts\SettingsHandler.cs" />
     <Compile Include="Assets\Scripts\WallMaterialController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\1_Buckets\GUI 3D Text Shader.shader" />
     <None Include="Assets\GoogleVR\Demos\Environment\DemoEnvUnlitGrayscale.shader" />
     <None Include="Assets\GoogleVR\Demos\Shaders\GVRDemo\GVRDemoAmbientOcclusion.shader" />
     <None Include="Assets\GoogleVR\Demos\Shaders\GVRDemo\GVRDemoUnlitGrayscaleToColor.shader" />

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Controlls the color of the walls.
+ */
 public class WallMaterialController : MonoBehaviour {
 
     private const float COLOR_CHANGE_DURATION = 1.0f;
@@ -22,10 +25,6 @@ public class WallMaterialController : MonoBehaviour {
         eastWall.GetComponent<Renderer>().material = m_sharedMaterial;
     }
 
-    void Update() {
-
-    }
-
     /** Sets the color of the walls
      */
     private void SetColor(Color color) {
@@ -36,6 +35,12 @@ public class WallMaterialController : MonoBehaviour {
         StartCoroutine(C_changeColor(color, COLOR_CHANGE_DURATION));
     }
 
+    /** Changes the color of the walls instantly.
+     * Used for loading the level when a color has already been chosen
+     */
+    public void ChangeColorInstant(Color color) {
+        SetColor(color);
+    }
 
     /** Changes the color, gradually, of the walls
      */
