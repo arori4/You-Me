@@ -8,12 +8,12 @@ using UnityEngine.SceneManagement;
 /* Controller for the room in the starting phase*/
 public class Level0Controller : MonoBehaviour {
 
+    // Constants
     private readonly static Vector3 BALL_START_LOCATION = new Vector3(2, 3, 1.5f);
     private readonly static Vector3 FLOATING_BALL_START_LOCATION = new Vector3(0, 2.5f, 2.5f);
     private readonly static float BALL_START_SCALE_AMOUNT = 0.5f;
     private readonly static float SPAWN_WAIT = 0.4f;
     private readonly static float BALL_WAIT_DELETE = 0.2f;
-    private readonly static float BALL_SPEED_START_Y = 3;
     private readonly static Vector3[] BALL_TEXTURE_START_POSITIONS = {
         new Vector3(-1.5f, 1, 2),
         new Vector3(0, 1, 2),
@@ -32,30 +32,38 @@ public class Level0Controller : MonoBehaviour {
         new Vector3(2, 3, 3)
     };
     private readonly static float[] BALL_SPEED_SPEEDS = { 0.2f, 0.5f, 0.7f };
-    private readonly static float[] HEARTBEAT_SQUARE_SPEEDS = { 0.8f, 1.0f, 1.3f };
+    private readonly static float[] HEARTBEAT_SQUARE_SPEEDS = { 0.8f, 1.0f, 1.15f };
 
     public WallMaterialController m_wallController;
-    public GameObject m_helloText;
     public GameObject m_doneButton;
     public ColorWheel wheel;
 
+    [Header("Prefabs")]
     public GameObject m_ballPrefab;
     public GameObject m_textureBallPrefab;
     public GameObject m_floatingBallPrefab;
     public GameObject m_speedBallPrefab;
-    public GameObject m_heartbeatSquarePrefab;
+    public GameObject m_metronomeSquarePrefab;
+    public Material[] arr_ballMaterials; // keep the same in preferenceManager
 
-    public Material[] arr_ballMaterials;
+    [Header ("Text")]
     public Text m_directions;
+    public GameObject m_helloText;
 
+    // Internal objects
     private GameObject m_currentBall;
     private GameObject[] arr_textureBalls;
     private GameObject[] arr_speedBalls;
     private GameObject[] arr_heartbeatSquares;
     private GameObject m_currentFloatingBall;
     private HeartbeatSquare m_currentHeartbeatSquare;
-    private Material m_chosenTexture;
-    private float m_chosenSpeed;
+
+    // Chosen variables
+    private Color m_chosenWallColor;
+    private Color m_chosenBallColor;
+    private Material m_chosenMaterial;
+    private float m_chosenBallSpeed;
+    private float m_chosenMetronomeSpeed;
 
     enum steps {
         LOAD,
@@ -63,7 +71,7 @@ public class Level0Controller : MonoBehaviour {
         BALL_TEXTURE_PICK,
         BALL_COLOR_PICK,
         BALL_SPEED_PICK,
-        HEARTBEAT_SPEED_PICK,
+        METRONOME_SPEED_PICK,
         NEXT_LEVEL
     };
     int m_currentStep;
@@ -76,26 +84,28 @@ public class Level0Controller : MonoBehaviour {
         arr_speedBalls = new GameObject[BALL_SPEED_SPEEDS.Length];
         arr_heartbeatSquares = new GameObject[HEARTBEAT_SQUARE_SPEEDS.Length];
     }
-	
-	void Update () {
-		
-	}
 
+    /*
+     * Callback for choosing a different color.
+     * Behavior changes based on step.
+     */
     public void ChooseColor(Color color) {
         switch (m_currentStep) {
             case (int)steps.LOAD:
                 break;
             case (int)steps.ROOM_COLOR_PICK:
+                m_chosenWallColor = color;
                 m_wallController.ChangeColor(color);
                 break;
             case (int)steps.BALL_TEXTURE_PICK:
                 break;
             case (int)steps.BALL_COLOR_PICK:
+                m_chosenBallColor = color;
                 m_currentBall.GetComponent<Ball>().ChangeColor(color);
                 break;
             case (int)steps.BALL_SPEED_PICK:
                 break;
-            case (int)steps.HEARTBEAT_SPEED_PICK:
+            case (int)steps.METRONOME_SPEED_PICK:
                 break;
         }
     }
@@ -120,8 +130,8 @@ public class Level0Controller : MonoBehaviour {
             case (int)steps.BALL_SPEED_PICK:
                 StepBallSpeedPick();
                 break;
-            case (int)steps.HEARTBEAT_SPEED_PICK:
-                StepHeartbeatSpeedPick();
+            case (int)steps.METRONOME_SPEED_PICK:
+                StepMetronomeSpeedPick();
                 break;
             case (int)steps.NEXT_LEVEL:
                 StepNextLevel();
@@ -129,10 +139,26 @@ public class Level0Controller : MonoBehaviour {
         }
     }
 
+    /*
+     * Loads the next level, buckets.
+     * Saves all to the preferenceManager, then goes to the next scene.
+     */
     private void StepNextLevel() {
+        PreferencesManager instance = PreferencesManager.instance;
+
+        instance.roomColor = m_chosenWallColor;
+        instance.ballColor = m_chosenBallColor;
+        instance.ballMaterial = m_chosenMaterial;
+        instance.ballSpeed = m_chosenBallSpeed;
+        instance.heartbeatSpeed = m_chosenMetronomeSpeed;
+        instance.Save();
+
         SceneManager.LoadScene("1_Buckets");
     }
 
+    /* Loads assets necessary for the level.
+     * For performance, we may use a coroutine to load, as well as fade in screen.
+     */
     private void StepLoad() {
 
     }
@@ -162,7 +188,7 @@ public class Level0Controller : MonoBehaviour {
         StartCoroutine(C_StepBallDelete(arr_textureBalls));
         m_currentBall = GameObject.Instantiate(m_ballPrefab);
         m_currentBall.GetComponent<Ball>().Environment_Choose_Create(BALL_START_LOCATION, BALL_START_SCALE_AMOUNT);
-        m_currentBall.GetComponent<Renderer>().material = m_chosenTexture;
+        m_currentBall.GetComponent<Renderer>().material = m_chosenMaterial;
 
         m_directions.text = "Choose the color of the ball";
 
@@ -176,9 +202,10 @@ public class Level0Controller : MonoBehaviour {
         m_directions.text = "Choose the speed of the ball";
     }
 
-    private void StepHeartbeatSpeedPick() {
+    /* Spawns the blocks to choose the metronome speed */
+    private void StepMetronomeSpeedPick() {
         StartCoroutine(C_StepBallDelete(arr_speedBalls));
-        StartCoroutine(C_StepHeartbeatSquareSpawn());
+        StartCoroutine(C_StepMetronomeSquareSpawn());
 
         m_directions.text = "Choose the speed of the heartbeat";
     }
@@ -226,10 +253,10 @@ public class Level0Controller : MonoBehaviour {
     }
 
     /* Spawns all the squares representing heartbeats, and activates them */
-    private IEnumerator C_StepHeartbeatSquareSpawn() {
+    private IEnumerator C_StepMetronomeSquareSpawn() {
         for (int index = 0; index < HEARTBEAT_SQUARES_START_POSITIONS.Length; index++) {
             arr_heartbeatSquares[index] = GameObject.Instantiate(
-                m_heartbeatSquarePrefab,
+                m_metronomeSquarePrefab,
                 HEARTBEAT_SQUARES_START_POSITIONS[index],
                 Quaternion.identity);
             yield return new WaitForSeconds(SPAWN_WAIT);
@@ -242,13 +269,13 @@ public class Level0Controller : MonoBehaviour {
     }
 
     public void BallTextureCallback(Material material) {
-        m_chosenTexture = material;
+        m_chosenMaterial = material;
         m_currentFloatingBall.GetComponent<Renderer>().material = material;
     }
 
     /* Callback for choosing ball speed event. Also goes to the next stage */
     public void BallSpeedCallback(float speed) {
-        m_chosenSpeed = speed;
+        m_chosenBallSpeed = speed;
         NextStage();
     }
 
@@ -258,5 +285,6 @@ public class Level0Controller : MonoBehaviour {
             m_currentHeartbeatSquare.StopCallback();
         }
         m_currentHeartbeatSquare = current; // no need to call start, handled by heartbeatSquare
+        m_chosenMetronomeSpeed = speed;
     }
 }

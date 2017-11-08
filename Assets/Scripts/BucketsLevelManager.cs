@@ -68,7 +68,7 @@ public class BucketsLevelManager : MonoBehaviour {
      */
     IEnumerator C_Initialize() {
 
-        yield return new WaitForSeconds(0.05f); // random, small number chosen
+        yield return new WaitForSeconds(0.1f); // random, small number chosen
 
         //Load settings if level and difficulty are different.
         if (PreferencesManager.instance != null) {
@@ -78,6 +78,8 @@ public class BucketsLevelManager : MonoBehaviour {
         yield return null;
 
         // Change the color of the room to the player preference
+        Debug.Log(wallMaterialController);
+        Debug.Log(PreferencesManager.instance.roomColor);
         wallMaterialController.ChangeColorInstant(PreferencesManager.instance.roomColor);
         yield return null;
         

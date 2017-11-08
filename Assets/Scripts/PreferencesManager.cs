@@ -30,13 +30,15 @@ public class PreferencesManager : MonoBehaviour {
     public float level = 0.0f;
     public float difficulty = 0.0f;
     public Color roomColor;
-    public Texture ballTexture; private int ballTextureIndex;
+    public Color ballColor;
+    public Material ballMaterial; private int ballMaterialIndex;
     public float ballSpeed;
     public float heartbeatSpeed;
-    public Texture[] arr_textures;
+    public Material[] arr_materials;
     private static string KEY_LEVEL = "KEY_LEVEL";
     private static string KEY_DIFFICULTY = "KEY_DIFFICULTY";
     private static string KEY_ROOM_COLOR = "ROOM_COLOR";
+    private static string KEY_BALL_COLOR = "BALL_COLOR";
     private static string KEY_BALL_TEXTURE = "BALL_TEXTURE";
     private static string KEY_BALL_SPEED = "BALL_SPEED";
     private static string KEY_HEARTBEAT_SPEED = "HEARTBEAT_SPEED";
@@ -90,7 +92,8 @@ public class PreferencesManager : MonoBehaviour {
 		if (PlayerPrefs.HasKey(KEY_LEVEL)) level = PlayerPrefs.GetFloat(KEY_LEVEL);
 		if (PlayerPrefs.HasKey(KEY_DIFFICULTY)) difficulty = PlayerPrefs.GetFloat(KEY_DIFFICULTY);
         if (PlayerPrefs.HasKey(KEY_ROOM_COLOR)) roomColor = StringToColor(PlayerPrefs.GetString(KEY_ROOM_COLOR));
-        if (PlayerPrefs.HasKey(KEY_BALL_TEXTURE)) ballTexture = arr_textures[PlayerPrefs.GetInt(KEY_BALL_TEXTURE)];
+        if (PlayerPrefs.HasKey(KEY_BALL_COLOR)) roomColor = StringToColor(PlayerPrefs.GetString(KEY_BALL_COLOR));
+        if (PlayerPrefs.HasKey(KEY_BALL_TEXTURE)) ballMaterial = arr_materials[PlayerPrefs.GetInt(KEY_BALL_TEXTURE)];
         if (PlayerPrefs.HasKey(KEY_BALL_SPEED)) ballSpeed = PlayerPrefs.GetFloat(KEY_BALL_SPEED);
         if (PlayerPrefs.HasKey(KEY_HEARTBEAT_SPEED)) ballSpeed = PlayerPrefs.GetFloat(KEY_HEARTBEAT_SPEED);
 
@@ -113,7 +116,8 @@ public class PreferencesManager : MonoBehaviour {
 		PlayerPrefs.SetFloat(KEY_LEVEL, level);
 		PlayerPrefs.SetFloat(KEY_DIFFICULTY, difficulty);
         PlayerPrefs.SetString(KEY_ROOM_COLOR, roomColor.ToString());
-        PlayerPrefs.SetFloat(KEY_BALL_TEXTURE, ballTextureIndex);
+        PlayerPrefs.SetString(KEY_BALL_COLOR, ballColor.ToString());
+        PlayerPrefs.SetFloat(KEY_BALL_TEXTURE, ballMaterialIndex);
         PlayerPrefs.SetFloat(KEY_BALL_SPEED, ballSpeed);
         PlayerPrefs.SetFloat(KEY_HEARTBEAT_SPEED, heartbeatSpeed);
 
