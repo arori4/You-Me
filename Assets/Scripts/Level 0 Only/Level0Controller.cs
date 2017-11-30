@@ -150,7 +150,12 @@ public class Level0Controller : MonoBehaviour {
         instance.ballColor = m_chosenBallColor;
         instance.ballMaterial = m_chosenMaterial;
         instance.ballSpeed = m_chosenBallSpeed;
-        instance.heartbeatSpeed = m_chosenMetronomeSpeed;
+        instance.metronomeSpeed = m_chosenMetronomeSpeed;
+
+        // Set initial game
+        instance.level = 0;
+
+        // Save preferences
         instance.Save();
 
         SceneManager.LoadScene("1_Buckets");

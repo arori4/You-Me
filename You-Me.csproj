@@ -82,8 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\1_Buckets\_scripts\BallBehavior.cs" />
-    <Compile Include="Assets\1_Buckets\_scripts\BucketBehavior.cs" />
-    <Compile Include="Assets\1_Buckets\_scripts\BucketTrigger.cs" />
     <Compile Include="Assets\GoogleVR\Demos\Scripts\DemoInputManager.cs" />
     <Compile Include="Assets\GoogleVR\Demos\Scripts\DemoSceneManager.cs" />
     <Compile Include="Assets\GoogleVR\Demos\Scripts\GVRDemo\GVRDemoManager.cs" />
@@ -194,16 +192,22 @@
     <Compile Include="Assets\GoogleVR\Scripts\Utilities\GvrUIHelpers.cs" />
     <Compile Include="Assets\GoogleVR\Scripts\Video\GvrVideoPlayerTexture.cs" />
     <Compile Include="Assets\Scripts\Ball.cs" />
-    <Compile Include="Assets\Scripts\BucketsLevelManager.cs" />
     <Compile Include="Assets\Scripts\Level 0 Only\ColorWheel.cs" />
     <Compile Include="Assets\Scripts\Level 0 Only\ColorWheelTriangle.cs" />
     <Compile Include="Assets\Scripts\Level 0 Only\HeartbeatSquare.cs" />
     <Compile Include="Assets\Scripts\Level 0 Only\Level0Controller.cs" />
     <Compile Include="Assets\Scripts\Level 0 Only\SpeedBall.cs" />
     <Compile Include="Assets\Scripts\Level 0 Only\TextureBall.cs" />
+    <Compile Include="Assets\Scripts\Level 1 Only\BucketBehavior.cs" />
+    <Compile Include="Assets\Scripts\Level 1 Only\BucketTrigger.cs" />
+    <Compile Include="Assets\Scripts\Level 1 Only\BucketsLevelManager.cs" />
+    <Compile Include="Assets\Scripts\Level 1 Only\Flier.cs" />
     <Compile Include="Assets\Scripts\ObjectRandomRotater.cs" />
+    <Compile Include="Assets\Scripts\OrderMemoryLevelLetter.cs" />
+    <Compile Include="Assets\Scripts\OrderMemoryLevelManager.cs" />
     <Compile Include="Assets\Scripts\PreferencesManager.cs" />
     <Compile Include="Assets\Scripts\SettingsHandler.cs" />
+    <Compile Include="Assets\Scripts\UserDataGathering.cs" />
     <Compile Include="Assets\Scripts\WallMaterialController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +228,7 @@
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTextureOverlay.shader" />
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTransparentOverlay.shader" />
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTransparentOverlayColor.shader" />
+    <None Include="Assets\Info.txt" />
     <None Include="Assets\Plugins\Android\AndroidManifest-Cardboard.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest-Daydream.xml" />
     <None Include="Assets\Plugins\Android\proguard-gvr.txt" />

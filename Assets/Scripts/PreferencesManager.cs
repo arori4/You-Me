@@ -16,24 +16,27 @@ public class PreferencesManager : MonoBehaviour {
 
 	// Static reference to the instance of our Preferences Manager.
 	public static PreferencesManager instance;
+    public bool debug;
 
 	// Player data
 	public string player_Name = "";
 	public int player_Age = 0;
 	public float player_Score = 0.0f;
+    public int timesOpened = 0;
     private static string KEY_NAME = "PLAYER_NAME";
     private static string KEY_AGE = "PLAYER_AGE";
     private static string KEY_SCORE = "PLAYER_SCORE";
-
+    private static string KEY_TIMES_OPENED = "TIMES_OPENED";
 
     // Environment data
     public float level = 0.0f;
     public float difficulty = 0.0f;
     public Color roomColor;
     public Color ballColor;
-    public Material ballMaterial; private int ballMaterialIndex;
+    public Material ballMaterial;
+    private int ballMaterialIndex;
     public float ballSpeed;
-    public float heartbeatSpeed;
+    public float metronomeSpeed;
     public Material[] arr_materials;
     private static string KEY_LEVEL = "KEY_LEVEL";
     private static string KEY_DIFFICULTY = "KEY_DIFFICULTY";
@@ -41,7 +44,7 @@ public class PreferencesManager : MonoBehaviour {
     private static string KEY_BALL_COLOR = "BALL_COLOR";
     private static string KEY_BALL_TEXTURE = "BALL_TEXTURE";
     private static string KEY_BALL_SPEED = "BALL_SPEED";
-    private static string KEY_HEARTBEAT_SPEED = "HEARTBEAT_SPEED";
+    private static string KEY_METRONOME_SPEED = "METRONOME_SPEED";
 
     // Heuristics
     public float numSuccesses;
@@ -60,8 +63,6 @@ public class PreferencesManager : MonoBehaviour {
     // Unused keys
     private static string KEY_AVATAR_COLOR = "AVATAR COLOR";
 
-
-
 	// Explicitly Load on start. This allows us to load from playerprefs immediately and fill these values.
 	void Start () {
 		Load ();
@@ -72,7 +73,8 @@ public class PreferencesManager : MonoBehaviour {
 		// If the instance is null, we set the reference.
 		if (instance == null) {
 			instance = this;
-		} 
+            timesOpened++;
+        } 
 		// If the instance is set and is not this, we destroy the gameObject attached.
 		else if (instance != this) {
 			Destroy (gameObject);
@@ -83,24 +85,29 @@ public class PreferencesManager : MonoBehaviour {
 
 	// Load from PlayerPrefs.
 	public void Load() {
-		Debug.Log ("PreferencesManger: Loading data...\n");
-
+		//Debug.Log ("PreferencesManger: Loading data...\n");
+        
 		if (PlayerPrefs.HasKey(KEY_NAME)) player_Name = PlayerPrefs.GetString(KEY_NAME);
 		if (PlayerPrefs.HasKey(KEY_AGE)) player_Age = PlayerPrefs.GetInt(KEY_AGE);
 		if (PlayerPrefs.HasKey(KEY_SCORE)) player_Score = PlayerPrefs.GetFloat(KEY_SCORE);
+        if (PlayerPrefs.HasKey(KEY_TIMES_OPENED)) timesOpened = PlayerPrefs.GetInt(KEY_TIMES_OPENED);
 
-		if (PlayerPrefs.HasKey(KEY_LEVEL)) level = PlayerPrefs.GetFloat(KEY_LEVEL);
+        if (PlayerPrefs.HasKey(KEY_LEVEL)) level = PlayerPrefs.GetFloat(KEY_LEVEL);
 		if (PlayerPrefs.HasKey(KEY_DIFFICULTY)) difficulty = PlayerPrefs.GetFloat(KEY_DIFFICULTY);
         if (PlayerPrefs.HasKey(KEY_ROOM_COLOR)) roomColor = StringToColor(PlayerPrefs.GetString(KEY_ROOM_COLOR));
         if (PlayerPrefs.HasKey(KEY_BALL_COLOR)) roomColor = StringToColor(PlayerPrefs.GetString(KEY_BALL_COLOR));
         if (PlayerPrefs.HasKey(KEY_BALL_TEXTURE)) ballMaterial = arr_materials[PlayerPrefs.GetInt(KEY_BALL_TEXTURE)];
         if (PlayerPrefs.HasKey(KEY_BALL_SPEED)) ballSpeed = PlayerPrefs.GetFloat(KEY_BALL_SPEED);
-        if (PlayerPrefs.HasKey(KEY_HEARTBEAT_SPEED)) ballSpeed = PlayerPrefs.GetFloat(KEY_HEARTBEAT_SPEED);
+        if (PlayerPrefs.HasKey(KEY_METRONOME_SPEED)) ballSpeed = PlayerPrefs.GetFloat(KEY_METRONOME_SPEED);
 
         //Settings
         if (PlayerPrefs.HasKey(KEY_SETTINGS_TUNE)) tune = PlayerPrefs.GetFloat(KEY_SETTINGS_TUNE);
 		if (PlayerPrefs.HasKey(KEY_SETTINGS_VOLUME)) volume = PlayerPrefs.GetFloat(KEY_SETTINGS_VOLUME);
-	}
+        
+        if (debug) {
+            level = 0;
+        }
+    }
 
 
 	// Save the data found in each variable to the specific key in PlayerPrefs.
@@ -111,6 +118,7 @@ public class PreferencesManager : MonoBehaviour {
 		PlayerPrefs.SetString (KEY_NAME, player_Name);
 		PlayerPrefs.SetInt (KEY_AGE, player_Age);
 		PlayerPrefs.SetFloat (KEY_SCORE, player_Score);
+        PlayerPrefs.SetInt(KEY_TIMES_OPENED, timesOpened);
 
         // Level
 		PlayerPrefs.SetFloat(KEY_LEVEL, level);
@@ -119,7 +127,7 @@ public class PreferencesManager : MonoBehaviour {
         PlayerPrefs.SetString(KEY_BALL_COLOR, ballColor.ToString());
         PlayerPrefs.SetFloat(KEY_BALL_TEXTURE, ballMaterialIndex);
         PlayerPrefs.SetFloat(KEY_BALL_SPEED, ballSpeed);
-        PlayerPrefs.SetFloat(KEY_HEARTBEAT_SPEED, heartbeatSpeed);
+        PlayerPrefs.SetFloat(KEY_METRONOME_SPEED, metronomeSpeed);
 
         // Settings
         PlayerPrefs.SetFloat (KEY_SETTINGS_TUNE, tune);
@@ -134,8 +142,6 @@ public class PreferencesManager : MonoBehaviour {
      * Essentially a deserializer, because toString serializes the color
      */
     private Color StringToColor(string colorString) {
-
-        Debug.Log(colorString);
 
         // Remove the header and brackets
         colorString = colorString.Replace("RGBA(", "");

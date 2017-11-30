@@ -13,7 +13,7 @@ public class WallMaterialController : MonoBehaviour {
     public GameObject ceiling;
     public GameObject northWall, southWall, westWall, eastWall;
 
-    Material m_sharedMaterial;
+    Material m_sharedMaterial; // shared amongst all wall panels
 
     void Start() {
         m_sharedMaterial = floor.GetComponent<Renderer>().material;
@@ -31,6 +31,9 @@ public class WallMaterialController : MonoBehaviour {
         m_sharedMaterial.color = color;
     }
 
+    /**
+     * Changes the color of the walls gradually.
+     */
     public void ChangeColor(Color color) {
         StartCoroutine(C_changeColor(color, COLOR_CHANGE_DURATION));
     }
