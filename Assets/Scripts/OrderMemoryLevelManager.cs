@@ -226,6 +226,7 @@ public class OrderMemoryLevelManager : MonoBehaviour {
 
         // Add chosen index to order
         arr_chosenOrder.Add(chosenIndex);
+        TeacherBehavior.instance.LookAt(arr_currentLetters[chosenIndex]);
 
         // Check if order is full
         if (arr_chosenOrder.Count == arr_order.Count) {

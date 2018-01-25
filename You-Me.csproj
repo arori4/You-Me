@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0157FDB8-71F8-1411-C11A-68C1C356A1D1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp.dll</AssemblyName>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -202,11 +202,13 @@
     <Compile Include="Assets\Scripts\Level 1 Only\BucketTrigger.cs" />
     <Compile Include="Assets\Scripts\Level 1 Only\BucketsLevelManager.cs" />
     <Compile Include="Assets\Scripts\Level 1 Only\Flier.cs" />
+    <Compile Include="Assets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\ObjectRandomRotater.cs" />
     <Compile Include="Assets\Scripts\OrderMemoryLevelLetter.cs" />
     <Compile Include="Assets\Scripts\OrderMemoryLevelManager.cs" />
     <Compile Include="Assets\Scripts\PreferencesManager.cs" />
     <Compile Include="Assets\Scripts\SettingsHandler.cs" />
+    <Compile Include="Assets\Scripts\TeacherBehavior.cs" />
     <Compile Include="Assets\Scripts\UserDataGathering.cs" />
     <Compile Include="Assets\Scripts\WallMaterialController.cs" />
   </ItemGroup>
@@ -232,8 +234,8 @@
     <None Include="Assets\Plugins\Android\AndroidManifest-Cardboard.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest-Daydream.xml" />
     <None Include="Assets\Plugins\Android\proguard-gvr.txt" />
-    <None Include="Assets\Shaders\DiffuseX.shader" />
-    <None Include="Assets\Shaders\SpecularX.shader" />
+    <None Include="Assets\Shaders\NewDiffuse.shader" />
+    <None Include="Assets\Shaders\NewSpecular.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

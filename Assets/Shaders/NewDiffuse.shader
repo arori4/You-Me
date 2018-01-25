@@ -1,4 +1,4 @@
-﻿Shader "Mobile/DiffuseX"
+﻿Shader "Mobile/NewDiffuse"
 {
     Properties
     {

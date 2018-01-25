@@ -1,6 +1,6 @@
-﻿ 
-Shader "Mobile/SpecularX" {
-Properties {
+﻿ // specular shader
+Shader "Mobile/NewSpecular" {
+Properties { // initial stuff
     _Shininess ("Shininess", Range (0.03, 1)) = 0.078125
     _MainTex ("Base (RGB) Gloss (A)", 2D) = "white" {}
     _Color("Color", Color) = (1,1,1,1)
@@ -14,12 +14,11 @@ CGPROGRAM
  
 inline fixed4 LightingMobileBlinnPhong (SurfaceOutput s, fixed3 lightDir, fixed3 halfDir, fixed atten)
 {
-    fixed diff = max (0, dot (s.Normal, lightDir));
-    fixed nh = max (0, dot (s.Normal, halfDir));
-    fixed spec = pow (nh, s.Specular*128) * s.Gloss;
+    fixed difference = max (0, dot (s.Normal, lightDir));
+    fixed specular = pow (max (0, dot (s.Normal, halfDir)), s.Specular*128) * s.Gloss;
    
     fixed4 c;
-    c.rgb = (s.Albedo * _LightColor0.rgb * diff + _LightColor0.rgb * spec) * atten;
+    c.rgb = (s.Albedo * _LightColor0.rgb * difference + _LightColor0.rgb * specular) * atten;
     UNITY_OPAQUE_ALPHA(c.a);
     return c;
 }
@@ -42,5 +41,6 @@ void surf (Input IN, inout SurfaceOutput o) {
 ENDCG
 }
  
+// need a fallback in case this fails
 FallBack "Mobile/VertexLit"
 }
